@@ -1,0 +1,1 @@
+- [Auth session schema](auth-session-schema.md) — Replit Auth needs its `sessions` table created in the development database and included in the tracked schema.
