@@ -47,7 +47,7 @@ export function Navbar() {
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" className="relative h-9 w-9 rounded-full ring-2 ring-transparent hover:ring-primary/20 transition-all">
                     <Avatar className="h-9 w-9">
-                      <AvatarImage src={user?.profileImageUrl} alt={user?.firstName || 'User'} />
+                      <AvatarImage src={user?.profileImageUrl ?? undefined} alt={user?.firstName || 'User'} />
                       <AvatarFallback className="bg-primary/10 text-primary">
                         {user?.firstName?.[0] || 'U'}
                       </AvatarFallback>
@@ -83,10 +83,10 @@ export function Navbar() {
             </div>
           ) : (
             <div className="flex items-center gap-2">
-              <Button variant="ghost" className="text-muted-foreground hover:text-foreground" onClick={() => window.location.href = "/api/login"}>
+              <Button variant="ghost" className="text-muted-foreground hover:text-foreground" onClick={() => window.location.href = "/login"}>
                 Log in
               </Button>
-              <Button onClick={() => window.location.href = "/api/login"} className="bg-primary hover:bg-primary/90 text-white shadow-md shadow-primary/20">
+              <Button onClick={() => window.location.href = "/login"} className="bg-primary hover:bg-primary/90 text-white shadow-md shadow-primary/20">
                 Sign up
               </Button>
             </div>

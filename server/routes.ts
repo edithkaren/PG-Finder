@@ -3,7 +3,6 @@ import type { Server } from "http";
 import { storage } from "./storage";
 import { api } from "@shared/routes";
 import { z } from "zod";
-import { setupAuth } from "./auth"; // Replit Auth usually adds this
 import { insertPgSchema } from "@shared/schema";
 
 export async function registerRoutes(
@@ -20,6 +19,11 @@ export async function registerRoutes(
   } catch (e) {
     console.log("Auth not setup yet or failed to import", e);
   }
+
+  app.get(api.cities.list.path, async (_req, res) => {
+    const cities = await storage.getCities();
+    res.json(cities);
+  });
 
   app.get(api.pgs.list.path, async (req, res) => {
     try {
@@ -55,7 +59,7 @@ export async function registerRoutes(
     try {
       const input = insertPgSchema.parse({
         ...req.body,
-        ownerId: req.user.id // Ensure ownerId comes from the session
+         ownerId: (req.user as any).id // Ensure ownerId comes from the session
       });
       const pg = await storage.createPg(input);
       res.status(201).json(pg);
@@ -79,7 +83,7 @@ export async function registerRoutes(
       const existing = await storage.getPg(Number(req.params.id));
       if (!existing) return res.status(404).json({ message: "PG not found" });
       
-      if (existing.ownerId !== req.user.id) {
+       if (existing.ownerId !== (req.user as any).id) {
         return res.status(403).json({ message: "Forbidden" });
       }
 

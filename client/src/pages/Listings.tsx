@@ -120,7 +120,7 @@ export default function Listings() {
                   <div className="col-span-full py-20 text-center bg-muted/30 rounded-2xl border border-dashed">
                     <p className="text-lg text-muted-foreground font-medium">No PGs found matching your criteria.</p>
                     <Button 
-                      variant="link" 
+                      variant="ghost"
                       onClick={() => { setCityFilter(""); setGenderFilter("all"); }}
                       className="text-primary mt-2"
                     >

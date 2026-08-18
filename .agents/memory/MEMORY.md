@@ -1,1 +1,2 @@
 - [Auth session schema](auth-session-schema.md) — Replit Auth needs its `sessions` table created in the development database and included in the tracked schema.
+- [Live city availability](live-city-availability.md) — city coverage is derived from current PostgreSQL listings and refreshed on a short polling interval.

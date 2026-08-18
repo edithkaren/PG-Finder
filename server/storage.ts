@@ -8,7 +8,7 @@ import {
   type InsertPg,
   type UpdatePgRequest
 } from "@shared/schema";
-import { eq, ilike, and, gte, lte } from "drizzle-orm";
+import { eq, ilike, and, gte, lte, asc, sql } from "drizzle-orm";
 
 export interface IStorage {
   getUser(id: number): Promise<User | undefined>;
@@ -22,6 +22,11 @@ export interface IStorage {
     priceMax?: number;
     search?: string;
   }): Promise<Pg[]>;
+  getCities(): Promise<Array<{
+    city: string;
+    count: number;
+    latestListingAt: Date | null;
+  }>>;
   getPg(id: number): Promise<Pg | undefined>;
   createPg(pg: InsertPg): Promise<Pg>;
   updatePg(id: number, updates: UpdatePgRequest): Promise<Pg>;
@@ -64,6 +69,18 @@ export class DatabaseStorage implements IStorage {
 
     if (conditions.length === 0) return await db.select().from(pgs);
     return await db.select().from(pgs).where(and(...conditions));
+  }
+
+  async getCities() {
+    return await db
+      .select({
+        city: pgs.city,
+        count: sql<number>`count(*)::int`,
+        latestListingAt: sql<Date | null>`max(${pgs.createdAt})`,
+      })
+      .from(pgs)
+      .groupBy(pgs.city)
+      .orderBy(asc(pgs.city));
   }
 
   async getPg(id: number): Promise<Pg | undefined> {

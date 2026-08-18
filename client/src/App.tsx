@@ -9,6 +9,8 @@ import Listings from "@/pages/Listings";
 import PgDetails from "@/pages/PgDetails";
 import ListProperty from "@/pages/ListProperty";
 import NotFound from "@/pages/not-found";
+import Login from "@/pages/Login";
+import { Footer } from "@/components/Footer";
 
 function Router() {
   return (
@@ -17,6 +19,7 @@ function Router() {
       <Route path="/pgs" component={Listings} />
       <Route path="/pgs/:id" component={PgDetails} />
       <Route path="/list-property" component={ListProperty} />
+      <Route path="/login" component={Login} />
       
       {/* Route for "My Listings" redirects to listings page for prototype */}
       <Route path="/my-listings" component={Listings} />
@@ -31,7 +34,12 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <Toaster />
-        <Router />
+        <div className="flex min-h-screen flex-col">
+          <div className="flex-1">
+            <Router />
+          </div>
+          <Footer />
+        </div>
       </TooltipProvider>
     </QueryClientProvider>
   );

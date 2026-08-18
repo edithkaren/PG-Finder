@@ -32,6 +32,22 @@ export function usePgs(filters?: { city?: string; gender?: string; search?: stri
       const data = await res.json();
       return parseWithLogging(api.pgs.list.responses[200], data, "pgs.list");
     },
+    staleTime: 15_000,
+    refetchInterval: 30_000,
+  });
+}
+
+export function useCities() {
+  return useQuery({
+    queryKey: [api.cities.list.path],
+    queryFn: async () => {
+      const res = await fetch(api.cities.list.path, { credentials: "include" });
+      if (!res.ok) throw new Error("Failed to fetch cities");
+      const data = await res.json();
+      return parseWithLogging(api.cities.list.responses[200], data, "cities.list");
+    },
+    staleTime: 15_000,
+    refetchInterval: 30_000,
   });
 }
 

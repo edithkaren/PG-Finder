@@ -15,6 +15,19 @@ export const errorSchemas = {
 };
 
 export const api = {
+  cities: {
+    list: {
+      method: 'GET' as const,
+      path: '/api/cities',
+      responses: {
+        200: z.array(z.object({
+          city: z.string(),
+          count: z.number(),
+          latestListingAt: z.coerce.date().nullable(),
+        })),
+      },
+    },
+  },
   pgs: {
     list: {
       method: 'GET' as const,

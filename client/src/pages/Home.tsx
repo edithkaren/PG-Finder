@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { usePgs } from "@/hooks/use-pgs";
+import { useCities, usePgs } from "@/hooks/use-pgs";
 import { Navbar } from "@/components/Navbar";
 import { PgCard } from "@/components/PgCard";
 import { Button } from "@/components/ui/button";
@@ -11,13 +11,14 @@ import {
   SelectTrigger, 
   SelectValue 
 } from "@/components/ui/select";
-import { Search, MapPin, Loader2 } from "lucide-react";
+import { Search, MapPin, Building2, ArrowRight, RefreshCw } from "lucide-react";
 import { Link, useLocation } from "wouter";
 
 export default function Home() {
   const [city, setCity] = useState("");
   const [_, setLocation] = useLocation();
   const { data: pgs, isLoading } = usePgs();
+  const { data: cities, isLoading: citiesLoading } = useCities();
 
   const handleSearch = () => {
     if (city) {
@@ -83,6 +84,52 @@ export default function Home() {
               Search
             </Button>
           </div>
+        </div>
+      </section>
+
+      <section className="border-y bg-background py-14">
+        <div className="container mx-auto px-4">
+          <div className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
+            <div>
+              <div className="flex items-center gap-2 text-sm font-semibold text-primary">
+                <span className="h-2 w-2 animate-pulse rounded-full bg-emerald-500" />
+                Live availability
+              </div>
+              <h2 className="mt-2 text-3xl font-display font-bold">Stays across every listed city</h2>
+              <p className="mt-2 text-muted-foreground">
+                Explore current properties by city. Availability syncs from the live listings database.
+              </p>
+            </div>
+            <div className="flex items-center gap-2 text-xs text-muted-foreground">
+              <RefreshCw className="h-3.5 w-3.5" />
+              Refreshes every 30 seconds
+            </div>
+          </div>
+
+          {citiesLoading ? (
+            <div className="mt-8 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-6">
+              {[1, 2, 3, 4, 5, 6].map((item) => (
+                <div key={item} className="h-28 animate-pulse rounded-2xl bg-muted" />
+              ))}
+            </div>
+          ) : (
+            <div className="mt-8 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-6">
+              {cities?.map((item) => (
+                <button
+                  key={item.city}
+                  onClick={() => setLocation(`/pgs?city=${encodeURIComponent(item.city)}`)}
+                  className="group rounded-2xl border border-border/70 bg-card p-4 text-left transition-all hover:-translate-y-1 hover:border-primary/50 hover:shadow-lg hover:shadow-primary/5"
+                >
+                  <Building2 className="h-5 w-5 text-primary" />
+                  <p className="mt-5 truncate font-display font-semibold">{item.city}</p>
+                  <p className="mt-1 text-xs text-muted-foreground">
+                    {item.count} {item.count === 1 ? "stay" : "stays"}
+                    <ArrowRight className="ml-1 inline h-3 w-3 transition-transform group-hover:translate-x-1" />
+                  </p>
+                </button>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
